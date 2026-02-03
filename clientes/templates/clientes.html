@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Asegurados</h1>
+<ul>
+    {% for cliente in clientes %}
+    <li>
+        <a href="{% url 'cliente_details' cliente.id %}">
+            <h2>{{cliente.nombre}}</h2>
+            <p>{{cliente.fecha_nacimiento}}</p>
+            <p>{{cliente.telefono}}</p>
+            <p>{{cliente.correo}}</p>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

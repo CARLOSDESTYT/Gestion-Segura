@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>{{cliente.nombre}}</h1>
+<p>{{cliente.fecha_nacimiento}}</p>
+<p>{{cliente.telefono}}</p>
+<p>{{cliente.correo}}</p>
+<p>{{cliente.notas}}</p>
+<ul>
+    {% for poliza in polizas %}
+    <li>
+        <a href="{% url 'editar_poliza' cliente.id poliza.id %}">
+            <h2>{{poliza.numero_poliza}}</h2>
+            <p>{{poliza.tipo_seguro}}</p>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+<button>
+    <li>
+        <a href="{% url 'editar_cliente' cliente.id %}">Editar</a>
+    </li>
+</button>
+<button>
+    <li>
+        <a href="{% url 'añadir_poliza' cliente.id %}">Añadir poliza</a>
+    </li>
+</button>
+{% endblock %}

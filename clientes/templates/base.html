@@ -12,19 +12,22 @@
             <li>
                 <a href="/">Home</a>
             </li>
-            <li>
-                <a href="/clientes">Clientes</a>
-            </li>
-            <li>
-                <a href=""></a>
-            </li>
             {% if user.is_authenticated %}
+                <li>
+                    <a href="/clientes">Clientes</a>
+                </li>
+                <li>
+                    <a href="/clientes/agregar">Agregar asegurado</a>
+                </li>
                 <li>
                     <a href="/logout">Logout</a>
                 </li>
             {% else %}
                 <li>
                     <a href="/signup">Signup</a>
+                </li>
+                <li>
+                    <a href="/signin">Signin</a>
                 </li>
             {% endif%}
         </ul>
