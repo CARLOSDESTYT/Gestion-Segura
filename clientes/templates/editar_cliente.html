@@ -6,7 +6,11 @@
 {{error}}
 <form method="POST">
     {% csrf_token %}
-    {{form.as_p}}
+    <p>Nombre completo: {{form.nombre}}</p>
+    <p>Fecha de nacimiento: {{form.fecha_nacimiento}}</p>
+    <p>Teléfono: {{form.telefono}}</p>
+    <p>Correo: {{form.correo}}</p>
+    <p>Notas: {{form.notas}}</p>
     <button>
         Guardar
     </button>

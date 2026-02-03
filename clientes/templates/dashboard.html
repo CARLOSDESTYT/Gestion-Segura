@@ -7,7 +7,7 @@
     <li>
         <a href="{% url 'cliente_details' cliente.id %}">
             <h2>{{cliente.nombre}}</h2>
-            <p>{{cliente.fecha_nacimiento|date:'j/M/Y'}}</p>
+            <p>{{cliente.fecha_nacimiento}}</p>
             <p>{{cliente.telefono}}</p>
             <p>{{cliente.correo}}</p>
         </a>

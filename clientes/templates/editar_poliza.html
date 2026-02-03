@@ -6,7 +6,13 @@
 {{error}}
 <form method="POST">
     {% csrf_token %}
-    {{form.as_p}}
+    <p>N. Póliza: {{form.numero_poliza}}</p>
+    <p>Tipo de seguro: {{form.tipo_seguro}}</p>
+    <p>Fecha de inicio: {{form.fecha_inicio}}</p>
+    <p>Fecha de vencimiento: {{form.fecha_vencimiento}}</p>
+    <p>Prima total: {{form.prima_total}}</p>
+    <p>Forma de pago: {{form.forma_pago}}</p>
+    <p>Estatus: {{form.estatus}}</p>
     <button>
         Guardar
     </button>

@@ -26,10 +26,10 @@ urlpatterns = [
     path('clientes/agregar/', views.agregar_cliente, name='agregar_cliente'),
     path('clientes/<int:cliente_id>/', views.cliente_details, name='cliente_details'),
     path('clientes/<int:cliente_id>/edit/', views.editar_cliente, name='editar_cliente'),
-    path('clientes/<int:cliente_id>/<int:poliza_id>/edit/', views.editar_poliza, name='editar_poliza'),
-    path('clientes/<int:cliente_id>/añadir/', views.añadir_poliza, name='añadir_poliza'),
-    path('clientes/<int:cliente_id>/<int:poliza_id>/delete/', views.delete_poliza, name='delete_poliza'),
     path('clientes/<int:cliente_id>/delete/', views.delete_cliente, name='delete_cliente'),
+    path('clientes/<int:cliente_id>/añadir/', views.añadir_poliza, name='añadir_poliza'),
+    path('clientes/<int:cliente_id>/<int:poliza_id>/edit/', views.editar_poliza, name='editar_poliza'),
+    path('clientes/<int:cliente_id>/<int:poliza_id>/delete/', views.delete_poliza, name='delete_poliza'),
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
 ]

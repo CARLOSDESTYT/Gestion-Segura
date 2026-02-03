@@ -15,16 +15,25 @@ class Cliente(models.Model):
         return self.nombre
     
 class Poliza(models.Model):
-    # Relación: Un cliente puede tener muchas pólizas
+    TIPO_SEGURO_CHOICES = [
+        ('Vida', 'Vida'),
+        ('Auto', 'Auto'),
+        ('Gastos médicos', 'Gastos médicos'),
+    ]
+
+    FORMA_PAGO_CHOICES = [
+        ('Mensual', 'Mensual'),
+        ('Anual', 'Anual'),
+    ]
+
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='polizas')
     
-    # Datos específicos del contrato
     numero_poliza = models.CharField(max_length=50, unique=True)
-    tipo_seguro = models.CharField(max_length=50) # Ej: Vida, Auto, Gastos Médicos
+    tipo_seguro = models.CharField(max_length=50, choices=TIPO_SEGURO_CHOICES) # Ej: Vida, Auto, Gastos Médicos
     fecha_inicio = models.DateField()
     fecha_vencimiento = models.DateField()
     prima_total = models.DecimalField(max_digits=10, decimal_places=2)
-    forma_pago = models.CharField(max_length=30)
+    forma_pago = models.CharField(max_length=30, choices=FORMA_PAGO_CHOICES)
     estatus = models.CharField(max_length=20, default='Activa')
 
     def __str__(self):

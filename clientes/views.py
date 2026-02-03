@@ -33,13 +33,15 @@ def clientes(request):
 
 @login_required
 def editar_cliente(request, cliente_id):
-    if request.method == 'GET':
+    try:
         cliente = get_object_or_404(Cliente, pk=cliente_id, user=request.user)
+    except:
+        return redirect('clientes')
+    if request.method == 'GET':
         form = ClienteForm(instance=cliente)
         return render(request, 'editar_cliente.html', {'cliente': cliente, 'form': form})
     else:
         try:
-            cliente = get_object_or_404(Cliente, pk=cliente_id, user=request.user)
             form = ClienteForm(request.POST, instance=cliente)
             form.save()
             return redirect('cliente_details', cliente.id)
@@ -48,49 +50,48 @@ def editar_cliente(request, cliente_id):
 
 @login_required
 def editar_poliza(request, cliente_id, poliza_id):
-    # Obtenemos la póliza y el cliente
-    poliza = get_object_or_404(Poliza, pk=poliza_id, cliente_id=cliente_id)
-    cliente = poliza.cliente # Obtenemos el objeto cliente desde la póliza
-    
+    try:
+        poliza = get_object_or_404(Poliza, pk=poliza_id, cliente_id=cliente_id, cliente__user=request.user)
+    except:
+        return redirect('clientes')
+    cliente = poliza.cliente
     if request.method == 'GET':
         form = PolizaForm(instance=poliza)
-        # IMPORTANTE: Asegúrate de usar 'editar_poliza.html' 
-        # Si usas 'editar_cliente.html', fallará si ese template busca un objeto cliente
-        return render(request, 'editar_poliza.html', {
-            'poliza': poliza, 
-            'cliente': cliente, # Agregamos esto para evitar el error de 'Reverse'
-            'form': form
-        })
+        return render(request, 'editar_poliza.html', {'poliza': poliza, 'cliente': cliente, 'form': form})
     else:
         form = PolizaForm(request.POST, instance=poliza)
         if form.is_valid():
             form.save()
             return redirect('cliente_details', cliente_id=cliente.id)
         else:
-            return render(request, 'editar_poliza.html', {
-                'poliza': poliza, 
-                'cliente': cliente,
-                'form': form, 
-                'error': "Error actualizando la póliza"
-            })
+            return render(request, 'editar_poliza.html', {'poliza': poliza, 'cliente': cliente, 'form': form, 'error': "Error actualizando la póliza"})
         
 @login_required
 def cliente_details(request, cliente_id,):
-    cliente = get_object_or_404(Cliente, pk=cliente_id, user=request.user)
+    try:
+        cliente = get_object_or_404(Cliente, pk=cliente_id, user=request.user)
+    except:
+        return redirect('clientes')
     polizas = Poliza.objects.filter(cliente=cliente)
     return render(request, 'cliente_details.html', {'cliente': cliente, 'polizas': polizas})
 
 
 @login_required
 def delete_cliente(request, cliente_id):
-    cliente = get_object_or_404(Cliente, pk=cliente_id, user=request.user)
+    try:
+        cliente = get_object_or_404(Cliente, pk=cliente_id, user=request.user)
+    except:
+        return redirect('clientes')
     if request.method == 'POST':
         cliente.delete()
         return redirect('clientes')
     
 @login_required
 def delete_poliza(request, cliente_id, poliza_id):
-    poliza = get_object_or_404(Poliza, pk=poliza_id, cliente_id=cliente_id, cliente__user=request.user)
+    try:
+        poliza = get_object_or_404(Poliza, pk=poliza_id, cliente_id=cliente_id, cliente__user=request.user)
+    except:
+        return redirect('clientes')
     if request.method == 'POST':
         poliza.delete()
         return redirect('cliente_details', cliente_id=cliente_id)
@@ -127,7 +128,10 @@ def agregar_cliente(request):
         
 @login_required
 def añadir_poliza(request, cliente_id):
-    client = get_object_or_404(Cliente, pk=cliente_id, user=request.user)
+    try:
+        client = get_object_or_404(Cliente, pk=cliente_id, user=request.user)
+    except:
+        return redirect('clientes')
     if request.method == 'GET':
         return render(request, 'añadir_poliza.html', {'form': PolizaForm(), 'cliente': client})
     else:
@@ -138,4 +142,9 @@ def añadir_poliza(request, cliente_id):
             new_poliza.save()
             return redirect('cliente_details', client.id)
         except ValueError:
-            return render(request, 'añadir_poliza.html', {'form': PolizaForm(), 'error': 'Ingrese datos validos'})
+            return render(request, 'añadir_poliza.html', {'form': PolizaForm, 'cliente': client, 'error': 'Ingrese datos validos'})
+
+@login_required
+def dashboard(request):
+
+    return render(request, 'dashboard.html', {})
