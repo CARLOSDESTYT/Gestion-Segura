@@ -1,4 +1,6 @@
 from django.db import models
+from datetime import date
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -22,8 +24,14 @@ class Poliza(models.Model):
     ]
 
     FORMA_PAGO_CHOICES = [
-        ('Mensual', 'Mensual'),
+        ('Semestral', 'Semestral'),
         ('Anual', 'Anual'),
+    ]
+
+    ESTATUS_CHOICES = [
+        ('Activa', 'Activa'),
+        ('Pendiente', 'Pendiente'),
+        ('Cancelada', 'Cancelada'),
     ]
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='polizas')
@@ -34,7 +42,40 @@ class Poliza(models.Model):
     fecha_vencimiento = models.DateField()
     prima_total = models.DecimalField(max_digits=10, decimal_places=2)
     forma_pago = models.CharField(max_length=30, choices=FORMA_PAGO_CHOICES)
-    estatus = models.CharField(max_length=20, default='Activa')
+    estatus = models.CharField(max_length=20, default='Activa', choices=ESTATUS_CHOICES)
 
     def __str__(self):
         return f"{self.tipo_seguro} - {self.numero_poliza}"
+    
+    @property
+    def proxima_renovacion(self):
+        hoy = date.today()
+        inicio = self.fecha_inicio
+
+        # Si la fecha de inicio es en el futuro, esa es la próxima renovación
+        if inicio > hoy:
+            return inicio
+
+        # Calculamos la diferencia en años y meses
+        diff = relativedelta(hoy, inicio)
+        
+        if self.forma_pago == 'Anual':
+            # Sumamos los años transcurridos + 1 para llegar al siguiente aniversario
+            aniversario = inicio + relativedelta(years=diff.years)
+            if aniversario < hoy:
+                aniversario += relativedelta(years=1)
+            return aniversario
+
+        else: # Semestral
+            # Calculamos total de meses transcurridos
+            total_meses = (diff.years * 12) + diff.months
+            # Calculamos cuántos semestres han pasado (división entera) + 1
+            cantidad_semestres = (total_meses // 6) + 1
+            return inicio + relativedelta(months=cantidad_semestres * 6)
+        
+    @property
+    def esta_al_dia(self):
+        if not self.fecha_ultimo_pago_realizado:
+            return False
+        
+        return self.fecha_ultimo_pago_realizado <= self.proxima_renovacion
