@@ -1,17 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Asegurados</h1>
+<h1>Asegurados con renovación este mes</h1>
+
 <ul>
-    {% for cliente in clientes %}
-    <li>
-        <a href="{% url 'cliente_details' cliente.id %}">
-            <h2>{{cliente.nombre}}</h2>
-            <p>{{cliente.fecha_nacimiento}}</p>
-            <p>{{cliente.telefono}}</p>
-            <p>{{cliente.correo}}</p>
-        </a>
-    </li>
+    {% for pagan_mes in pagan_este_mes %}
+        <li>
+            <a href="{% url 'cliente_details' pagan_mes.cliente.id %}">
+                {{ pagan_mes.cliente.nombre }} – 
+                {{ pagan_mes.tipo_seguro }} – 
+                {% now "m" as mes_actual %}
+                {% now "Y" as anio_actual %}
+
+                {% if pagan_mes.proxima_renovacion and pagan_mes.proxima_renovacion|date:"m" == mes_actual and pagan_mes.proxima_renovacion|date:"Y" == anio_actual %}
+                    {{ pagan_mes.proxima_renovacion }}
+                {% elif pagan_mes.ultima_renovacion and pagan_mes.ultima_renovacion|date:"Y" == anio_actual %}
+                    {{ pagan_mes.ultima_renovacion }}
+                {% else %}
+                {% endif %}
+            </a>
+        </li>
+    {% empty %}
+    {% endfor %}
+    {% for pagan_40_dias in pagan_proximos_40_dias %}
+        <li>
+            <a href="{% url 'cliente_details' pagan_40_dias.cliente.id %}">
+                {{ pagan_40_dias.cliente.nombre }} – 
+                {{ pagan_40_dias.tipo_seguro }} – 
+                {% now "m" as mes_actual %}
+                {{ pagan_40_dias.proxima_renovacion }}
+            </a>
+        </li>
+    {% empty %}
+        <li>No hay más pólizas por renovar en el mes o los próximos 40 días.</li>
     {% endfor %}
 </ul>
 

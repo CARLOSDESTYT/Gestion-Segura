@@ -6,6 +6,8 @@ from django.db import IntegrityError
 from .forms import ClienteForm, PolizaForm
 from .models import Cliente, Poliza
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your views here.
 def home(request):
@@ -146,5 +148,32 @@ def añadir_poliza(request, cliente_id):
 
 @login_required
 def dashboard(request):
+    hoy = timezone.now().date()
+    fin_40_dias = hoy + timedelta(days=40)
 
-    return render(request, 'dashboard.html', {})
+    # Pólizas activas del usuario
+    polizas = (
+        Poliza.objects
+        .filter(cliente__user=request.user, estatus='Activa')
+        .select_related('cliente')
+    )
+
+    pagan_este_mes = []
+    pagan_proximos_40_dias = []
+
+    for p in polizas:
+        renovacion = p.proxima_renovacion
+
+        # Se pagan este mes
+        if p.ultima_renovacion.month == hoy.month and p.ultima_renovacion.year == hoy.year or p.proxima_renovacion.month == hoy.month and p.proxima_renovacion.year == hoy.year:
+            pagan_este_mes.append(p)
+
+        # Se pagan en los próximos 40 días (pero no este mes)
+        elif hoy < renovacion <= fin_40_dias:
+            pagan_proximos_40_dias.append(p)
+
+    return render(request, 'dashboard.html', {
+        'pagan_este_mes': pagan_este_mes,
+        'pagan_proximos_40_dias': pagan_proximos_40_dias,
+        'hoy': hoy,
+    })
