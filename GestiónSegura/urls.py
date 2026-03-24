@@ -33,9 +33,6 @@ urlpatterns = [
     path('clientes/<int:cliente_id>/<int:poliza_id>/delete/', views.delete_poliza, name='delete_poliza'),
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
-<<<<<<< HEAD
     path('nosotros/', views.nosotros, name='nosotros'),
     path('contacto/', views.contacto, name='contacto'),
-=======
->>>>>>> 2fca1951389f60e505f5d6ce3d55bf476b77d275
 ]
