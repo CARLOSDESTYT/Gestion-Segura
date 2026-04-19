@@ -8,7 +8,7 @@
     </div>
 
     {% if error %}
-        <p class="error-message">{{ error }}</p>
+        <p class="error-message" style="color: red; background: #fee; padding: 10px; border-radius: 5px;">{{ error }}</p>
     {% endif %}
 
     <form method="POST" class="gestion_grid_form">
@@ -16,45 +16,45 @@
         
         <div class="gestion_seccion">
             <div class="campo_gestion">
-                <label for="{{ form.numero_poliza.id_for_label }}">Número de Póliza</label>
+                <label>Número de Póliza</label>
                 {{ form.numero_poliza }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.tipo_seguro.id_for_label }}">Tipo de seguro</label>
+                <label>Tipo de Seguro</label>
                 {{ form.tipo_seguro }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.fecha_inicio.id_for_label }}">Fecha de inicio</label>
-                {{ form.fecha_inicio }}
+                <label>Estado</label>
+                {{ form.estatus }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.fecha_vencimiento.id_for_label }}">Fecha de vencimiento</label>
-                {{ form.fecha_vencimiento }}
+                <label><strong>Forma de Pago</strong></label>
+                {{ form.forma_pago }}
             </div>
         </div>
 
         <div class="gestion_seccion">
             <div class="campo_gestion">
-                <label for="{{ form.prima_total.id_for_label }}">Prima total ($)</label>
-                {{ form.prima_total }}
+                <label>Fecha de Inicio</label>
+                {{ form.fecha_inicio }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.forma_pago.id_for_label }}">Forma de pago</label>
-                {{ form.forma_pago }}
+                <label>Fecha de Vencimiento</label>
+                {{ form.fecha_vencimiento }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.fecha_ultimo_pago.id_for_label }}">Fecha de último pago</label>
+                <label>Fecha de Último Pago</label>
                 {{ form.fecha_ultimo_pago }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.estatus.id_for_label }}">Estatus de la póliza</label>
-                {{ form.estatus }}
+                <label>Prima Total ($)</label>
+                {{ form.prima_total }}
             </div>
         </div>
 
@@ -68,12 +68,12 @@
 
     <hr class="divisor_peligro">
 
-    <div class="seccion_peligro">
-        <p><strong></strong> Si eliminas esta póliza, no se podrán recuperar los datos.</p>
+    <div class="seccion_peligro" style="text-align: center; padding: 20px; border: 1px dashed red; border-radius: 10px;">
+        <p>Si eliminas esta póliza, no se podrán recuperar los datos.</p>
         <form action="{% url 'delete_poliza' cliente.id poliza.id %}" method="POST" onsubmit="return confirm('¿Meli, estás segura de borrar esta póliza?');">
             {% csrf_token %}
             <button type="submit" class="btn_eliminar_borde">
-                Eliminar Póliza
+                Eliminar Póliza 
             </button>
         </form>
     </div>

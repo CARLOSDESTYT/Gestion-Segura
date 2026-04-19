@@ -8,59 +8,59 @@
     </div>
 
     {% if error %}
-        <p class="error-message">{{ error }}</p>
+        <p class="error-message" style="color: red; background: #fee; padding: 10px; border-radius: 5px;">{{ error }}</p>
     {% endif %}
 
-    <form action="{% url 'añadir_poliza' cliente.id %}" method="POST" class="gestion_grid_form">
+    <form method="POST" class="gestion_grid_form">
         {% csrf_token %}
         
         <div class="gestion_seccion">
             <div class="campo_gestion">
-                <label for="{{ form.numero_poliza.id_for_label }}">Número de Póliza</label>
+                <label>Número de Póliza</label>
                 {{ form.numero_poliza }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.tipo_seguro.id_for_label }}">Tipo de Seguro</label>
+                <label>Tipo de Seguro</label>
                 {{ form.tipo_seguro }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.estatus.id_for_label }}">Estado de la Póliza</label>
+                <label>Estado</label>
                 {{ form.estatus }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.forma_pago.id_for_label }}">Forma de Pago</label>
+                <label><strong>Forma de Pago</strong></label>
                 {{ form.forma_pago }}
             </div>
         </div>
 
         <div class="gestion_seccion">
             <div class="campo_gestion">
-                <label for="{{ form.fecha_inicio.id_for_label }}">Fecha de Inicio</label>
+                <label>Fecha de Inicio</label>
                 {{ form.fecha_inicio }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.fecha_vencimiento.id_for_label }}">Fecha de Vencimiento</label>
+                <label>Fecha de Vencimiento</label>
                 {{ form.fecha_vencimiento }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.fecha_ultimo_pago.id_for_label }}">Fecha de Último Pago</label>
+                <label>Fecha de Último Pago</label>
                 {{ form.fecha_ultimo_pago }}
             </div>
 
             <div class="campo_gestion">
-                <label for="{{ form.prima_total.id_for_label }}">Prima Total ($)</label>
+                <label>Prima Total ($)</label>
                 {{ form.prima_total }}
             </div>
         </div>
 
         <div class="gestion_footer">
             <button type="submit" class="nav_boton nav_boton--signup btn_largo">
-                Guardar Póliza
+                Crear Póliza
             </button>
             <a href="{% url 'cliente_details' cliente.id %}" class="enlace_cancelar">Cancelar</a>
         </div>

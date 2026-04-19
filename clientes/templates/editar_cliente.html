@@ -54,7 +54,7 @@
 
     <hr class="divisor_peligro">
 
-    <div class="seccion_peligro">
+    <div class="seccion_peligro" style="text-align: center; padding: 20px; border: 1px dashed red; border-radius: 10px;">
         <p><strong></strong> Si eliminas este cliente, se borrarán todas sus pólizas asociadas.</p>
         <form action="{% url 'delete_cliente' cliente.id %}" method="POST" onsubmit="return confirm('¿Meli, estás segura de borrar a este asegurado?');">
             {% csrf_token %}

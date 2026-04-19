@@ -160,22 +160,28 @@ def dashboard(request):
 
     pagan_este_mes = []
     pagan_proximos_40_dias = []
+    pagan_hoy = []
 
     for p in polizas:
         renovacion = p.proxima_renovacion
 
+        # Se pagan ese mismo día
+        if p.ultima_renovacion.month == hoy.month and p.ultima_renovacion.year == hoy.year and p.ultima_renovacion.day == hoy.day: # Se agrega esta línea
+            pagan_hoy.append(p) # Se agrega esta línea
+
         # Se pagan este mes
-        if p.ultima_renovacion.month == hoy.month and p.ultima_renovacion.year == hoy.year or p.proxima_renovacion.month == hoy.month and p.proxima_renovacion.year == hoy.year:
+        elif p.ultima_renovacion.month == hoy.month and p.ultima_renovacion.year == hoy.year or p.proxima_renovacion.month == hoy.month and p.proxima_renovacion.year == hoy.year: # Se cambia de if a elif
             pagan_este_mes.append(p)
 
         # Se pagan en los próximos 40 días (pero no este mes)
         elif hoy < renovacion <= fin_40_dias:
             pagan_proximos_40_dias.append(p)
 
+
     return render(request, 'dashboard.html', {
         'pagan_este_mes': pagan_este_mes,
         'pagan_proximos_40_dias': pagan_proximos_40_dias,
-        'hoy': hoy,
+        'pagan_hoy': pagan_hoy,
     })
 
 def nosotros(request):

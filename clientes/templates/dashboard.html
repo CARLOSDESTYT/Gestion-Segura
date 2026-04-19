@@ -3,54 +3,110 @@
 {% block content %}
 <div class="gestion_container">
     <div class="gestion_header_flex">
-        <h1>{{ titulo_dashboard|default:"Dashboard" }}</h1>
-        <p class="subtitulo_header">Resumen de renovaciones y actividad del mes: {% now "F Y" %}</p>
+        <h1>Dashboard</h1>
+        <p class="subtitulo_header">Resumen de actividad: {% now "F Y" %}</p>
     </div>
 
-    <div class="dashboard_stats_grid">
-        <div class="stat_card shadow"> <div class="stat_info">
-                <h4>Renovaciones</h4>
-                <h2>{{ pagan_este_mes|length }}</h2>
-                <p>Este mes</p>
-            </div>
-        </div>
-
-        <div class="stat_card shadow highlight_blue">
-            <div class="stat_info">
-                <h4>Próximos 40 días</h4>
-                <h2>{{ pagan_proximos_40_dias|length }}</h2>
-                <p>Seguimiento</p>
-            </div>
-        </div>
-    </div>
-
-    <div class=" gestion_container shadow">
+    <div class="gestion_container shadow alerta_pago_hoy" style="background-color: #ffffff; border: 2px solid #ffffff; margin-bottom: 30px;">
         <div class="seccion_header">
             <h3>Pólizas por renovar</h3>
         </div>
         
-        <div class="gestion_grid_form">
-            {% for pagan_mes in pagan_este_mes %}
-            <div class="card poliza_card dashboard_card_fix">
-                <div class="poliza_card_header">
-                    <h3>Cliente: {{ pagan_mes.cliente.nombre }}</h3>
-                    <span class="badget badget--{{ pagan_mes.estatus|lower }}">{{ pagan_mes.estatus }}</span>
+        <div class="dashboard_stats_grid" style="grid-template-columns: 1fr; margin-bottom: 20px;">
+            <div class="stat_card shadow highlight_blue" style="background-color: rgb(202, 235, 248); margin-bottom: 20px; width: 100%; display: flex; justify-content: center; align-items: center; padding: 20px;"> 
+                <div class="stat_info" style="text-align: center;">
+                    <h2 style="font-size: 2.3rem; margin: 0;">
+                        {{ pagan_hoy|length }} 
+                        <span style="font-size: 1.6rem; color: #00a8e8;">Pólizas hoy</span>
+                    </h2>
                 </div>
-                <div class="poliza_card_body">
-                    <p><strong>Seguro:</strong> {{ pagan_mes.tipo_seguro }}</p>
-                    <p><strong>Vencimiento:</strong> {{ pagan_mes.fecha_vencimiento|date:"d/M/Y" }}</p>
-                </div>
-                <a href="{% url 'cliente_details' pagan_mes.cliente.id %}" class="nav_boton nav_boton--signup">
-                    Ver Cliente
-                </a>
             </div>
+        </div>
+
+        <div class="gestion_grid_form" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+            {% for p in pagan_hoy %}
+                <div class="card poliza_card">
+                    <div class="poliza_card_header">
+                        <h3>{{ p.cliente.nombre }}</h3>
+                    </div>
+                    <div class="poliza_card_body">
+                        <p><strong>Número de póliza:</strong> {{ p.numero_poliza }}</p>
+                        <p><strong>Forma de pago:</strong> {{ p.forma_pago }}</p>
+                        <p><strong>Fecha de último pago:</strong> {{ p.fecha_ultimo_pago|date:"d/m/Y"|default:"Pendiente" }}</p>
+                    </div>
+                    <a href="{% url 'editar_poliza' p.cliente.id p.id %}" class="nav_boton nav_boton--signup">Ver Póliza</a>
+                </div>
             {% empty %}
-            <div class="empty_state_text">
-                <p>No hay pólizas registradas para renovación este mes.</p>
-            </div>
+                <p class="empty_state_text">No hay renovaciones para hoy.</p>
             {% endfor %}
         </div>
     </div>
 
-</div>
+    <div class="gestion_container shadow alerta_pago_hoy" style="background-color: #ffffff; border: 2px solid #ffffff; margin-bottom: 30px;">
+        <div class="seccion_header">
+            <h3>Próximas pólizas por renovar</h3>
+        </div>
+
+        <div class="dashboard_stats_grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+            
+            <div class="columna_dashboard" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="stat_card shadow highlight_blue" style="background-color: rgb(202, 235, 248); margin-bottom: 20px; width: 100%; max-width: 400px; display: flex; justify-content: center; align-items: center; padding: 20px;"> 
+                    <div class="stat_info" style="text-align: center;">
+                        <h2 style="font-size: 2.3rem; margin: 0;">
+                            {{ pagan_este_mes|length }} 
+                            <span style="font-size: 1.6rem; color: #00a8e8;">Pólizas este mes</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="lista_polizas_dashboard" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                    {% for p in pagan_este_mes %}
+                        <div class="card poliza_card dashboard_card_fix" style="margin-bottom: 15px; width: 100%; max-width: 400px;">
+                            <div class="poliza_card_header">
+                                <h3>{{ p.cliente.nombre }}</h3>
+                            </div>
+                            <div class="poliza_card_body">
+                                <p><strong>Número de póliza:</strong> {{ p.numero_poliza }}</p>
+                                <p><strong>Forma de pago:</strong> {{ p.forma_pago }}</p>
+                                <p><strong>Fecha de último pago:</strong> {{ p.fecha_ultimo_pago|date:"d/m/Y"|default:"Pendiente" }}</p>
+                            </div>
+                            <a href="{% url 'editar_poliza' p.cliente.id p.id %}" class="nav_boton nav_boton--signup">Ver Póliza</a>
+                        </div>
+                    {% empty %}
+                        <p class="empty_state_text">No hay renovaciones este mes.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="columna_dashboard" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="stat_card shadow highlight_blue" style="background-color: rgb(202, 235, 248); margin-bottom: 20px; width: 100%; max-width: 400px; display: flex; justify-content: center; align-items: center; padding: 20px;"> 
+                    <div class="stat_info" style="text-align: center;">
+                        <h2 style="font-size: 2.3rem; margin: 0;">
+                            {{ pagan_proximos_40_dias|length }} 
+                            <span style="font-size: 1.6rem; color: #00a8e8;">Pólizas próximos 40 días</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="lista_polizas_dashboard" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                    {% for p in pagan_proximos_40_dias %}
+                        <div class="card poliza_card dashboard_card_fix" style="margin-bottom: 15px; width: 100%; max-width: 400px;">
+                            <div class="poliza_card_header">
+                                <h3>{{ p.cliente.nombre }}</h3>
+                            </div>
+                            <div class="poliza_card_body">
+                                <p><strong>Número de póliza:</strong> {{ p.numero_poliza }}</p>
+                                <p><strong>Forma de pago:</strong> {{ p.forma_pago }}</p>
+                                <p><strong>Fecha de último pago:</strong> {{ p.fecha_ultimo_pago|date:"d/m/Y"|default:"Pendiente" }}</p>
+                            </div>
+                            <a href="{% url 'editar_poliza' p.cliente.id p.id %}" class="nav_boton nav_boton--signup">Ver Póliza</a>
+                        </div>
+                    {% empty %}
+                        <p class="empty_state_text">No hay renovaciones próximas.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div> 
+    </div> 
+</div> 
 {% endblock %}
