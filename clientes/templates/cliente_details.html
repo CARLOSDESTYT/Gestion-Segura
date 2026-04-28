@@ -2,71 +2,74 @@
 
 {% block content %}
 <div class="gestion_container">
+    <!-- Títulos y botones -->
     <div class="gestion_header_flex">
-        <h3>Cliente: {{ cliente.nombre }}</h3>
-        <div class="acciones_header">
+        <h3>Cliente: <span>{{ cliente.nombre }}</span></h3>
+        <div class="navegacion">
             <a href="{% url 'editar_cliente' cliente.id %}" class="nav_boton nav_boton--signup btn_icon">
                 Editar Datos
             </a>
-            <a href="{% url 'añadir_poliza' cliente.id %}" class="nav_boton nav_boton--signup btn_icon">
+            <a href="{% url 'agregar_poliza' cliente.id %}" class="nav_boton nav_boton--signup btn_icon">
                 + Agregar Póliza
             </a>
         </div>
     </div>
 
-    <div class="info_cliente_card card">
-        <h3>Datos Personales</h3>
-        <div class="info_grid">
-            <p><strong>Fecha de nacimiento:</strong> {{ cliente.fecha_nacimiento|date:'j/M/Y' }}</p>
-            <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
-            <p><strong>Email:</strong> {{ cliente.correo }}</p>
+    <!-- Información del asegurado -->
+    <div class="card info_cliente_card">
+        <h4>Datos Personales</h4>
+        <div class="contenedor_principal">
+            <!-- IZQUIERDA -->
+            <div class="datos_cliente">
+                <p><strong>Fecha de nacimiento:</strong> {{ cliente.fecha_nacimiento|date:'j/M/Y' }}</p>
+                <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+                <p><strong>Email:</strong> {{ cliente.correo }}</p>
+            </div>
+            <!-- DERECHA -->
+            {% if cliente.notas %}
+            <div class="notas_cliente">
+                <p><strong>Notas adicionales:</strong></p>
+                <pre class="pre_notas">{{ cliente.notas }}</pre>
+            </div>
+            {% endif %}
         </div>
-        {% if cliente.notas %}
-        <div class="notas_cliente">
-            <h4>Notas adicionales:</h4>
-            <pre class="pre_notas">{{ cliente.notas }}</pre>
-        </div>
-        {% endif %}
     </div>
 
-    <div class="seccion_polizas">
-        <h3>Pólizas Registradas</h3>
-        
-        {% if polizas %}
-            <div class="polizas_grid">
-                {% for poliza in polizas %}
-                    <div class="card poliza_card">
-                        <div class="poliza_card_header">
-                            <h3>Póliza: {{ poliza.numero_poliza }}</h3>
-                            <span class="badget badget--{{ poliza.estatus|lower }}">
-                                {{ poliza.estatus }}
-                            </span>
-                        </div>
-
-                        <div class="poliza_card_body">
-                            <p><strong>Tipo de Seguro:</strong> {{ poliza.tipo_seguro }}</p>
-                            <p><strong>Vigencia:</strong> {{ poliza.fecha_inicio|date:"d/m/Y" }} - {{ poliza.fecha_vencimiento|date:"d/m/Y" }}</p>
-                            <p><strong>Prima Total:</strong> ${{ poliza.prima_total }}</p>
-                            <p><strong>Forma de Pago:</strong> {{ poliza.forma_pago }}</p>
-                        </div>
-
-                        <div class="poliza_card_footer" style="background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-                            <p style="margin:0; color: #2c3e50;"><strong>Próxima Renovación:</strong></p>
-                            <p style="margin:0; color: #000000;">{{ poliza.proxima_renovacion|date:"d \d\e F \d\e Y" }}</p>
-                        </div>
-
-                        <a href="{% url 'editar_poliza' cliente.id poliza.id %}" class="nav_boton nav_boton--signup btn_icon">
-                            Editar Póliza
-                        </a>
+    <!-- Pólizas del asegurado -->
+    <h3>Pólizas Registradas</h3>
+    
+    {% if polizas %}
+        <div class="polizas_grid">
+            {% for poliza in polizas %}
+                <div class="card poliza_card">
+                    <div class="poliza_card_header">
+                        <h4>Póliza: {{ poliza.numero_poliza }}</h4>
+                        <span>{{ poliza.estatus }}</span>
                     </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="empty_state card">
-                <p>Este cliente aún no tiene pólizas registradas.</p>
-                <a href="{% url 'añadir_poliza' cliente.id %}" class="nav_boton nav_boton--signup">Agregar la primera póliza</a>
-            </div>
-        {% endif %}
-    </div>
+
+                    <div class="poliza_card_body">
+                        <p><strong>Tipo de Seguro:</strong> {{ poliza.tipo_seguro }}</p>
+                        <p><strong>Vigencia:</strong> {{ poliza.fecha_inicio|date:"d/m/Y" }} - {{ poliza.fecha_vencimiento|date:"d/m/Y" }}</p>
+                        <p><strong>Prima Total:</strong> ${{ poliza.prima_total }}</p>
+                        <p><strong>Forma de Pago:</strong> {{ poliza.forma_pago }}</p>
+                    </div>
+
+                    <div class="poliza_card_footer">
+                        <p><strong>Próxima Renovación:</strong></p>
+                        <p>{{ poliza.proxima_renovacion|date:"d \d\e F \d\e Y" }}</p>
+                    </div>
+
+                    <a href="{% url 'editar_poliza' cliente.id poliza.id %}" class="nav_boton nav_boton--signup">
+                        Editar Póliza
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty_state_text card">
+            <p>Este cliente aún no tiene pólizas registradas.</p>
+            <a href="{% url 'agregar_poliza' cliente.id %}" class="nav_boton nav_boton--signup">Agregar la primera póliza</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

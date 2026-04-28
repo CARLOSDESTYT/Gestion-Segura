@@ -1,58 +1,52 @@
-{% load static %}
+{% load static %} <!-- Carga de estáticos -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configuración responsive -->
     <title>Gestión Asegurada</title>
-    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Archivos CSS -->
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}"> <!-- Normalización de estilos entre navegadores -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Estilos personalizados de la aplicación -->
 </head>
 <body>
-    <header class="header">
+    <!-- HEADER con Logo con redirección a página 'home' y
+    navegación principal (Dashboard, Asegurados, Salir, Registrarse e Iniciar sesión) -->
+    <header>
         <div class="contenedor"> 
             <div class="barra">
+                <!-- Logo Gestión Asegurada -->
                 <a class="logo" href="{% url 'home' %}">
-                    <h3 class="logo_nombre no-margin">Gestión<span class="logo_bold">Asegurada</span></h3>
+                    Gestión<span>Asegurada</span>
                 </a>
 
                 <nav class="navegacion">
-    <a href="{% url 'nosotros' %}" class="navegacion_enlace">Sobre Nosotros</a>
-    {% if user.is_authenticated %}
-        <a href="{% url 'agregar_cliente' %}" class="navegacion_enlace">Agregar Asegurado</a>
-        <a href="{% url 'dashboard' %}" class="navegacion_enlace">Dashboard</a>
-        
-        <a href="/clientes" class="navegacion_enlace">Clientes</a>
-        <a href="/logout" class="nav_boton nav_boton--login">Salir</a>
-    {% else %}
-        <a href="{% url 'signup' %}" class="nav_boton nav_boton--signup">Registrarse</a>
-        <a href="{% url 'signin' %}" class="nav_boton nav_boton--login">Iniciar Sesión</a>
-    {% endif %}
-</nav>
+                    <!-- Si el usuario está logeado: Dashboard, Asegurados y Salir -->
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="navegacion_enlace">Dashboard</a>
+                        <a href="{% url 'clientes' %}" class="navegacion_enlace">Asegurados</a>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button class="nav_boton nav_boton--login" type="submit">Salir</button>
+                        </form>
+                    <!-- NO está logeado: Registrarse e Iniciar sesión -->
+                    {% else %}
+                        <a href="{% url 'signup' %}" class="nav_boton nav_boton--signup">Registrarse</a>
+                        <a href="{% url 'signin' %}" class="nav_boton nav_boton--login">Iniciar Sesión</a>
+                    {% endif %}
+                </nav>
             </div> 
         </div>
     </header>
 
+    <!-- Bloques reutilizables para que las plantillas hereden esta base y sobrescriban contenido -->
     {% block banner %}{% endblock %}
 
     <div class="contenedor">
         {% block content %}{% endblock %}
     </div>
 
-    <footer class="footer">
-        <div class="contenedor">
-            <div class="barra">
-                <div class="footer_logo-group"> 
-                    <a class="logo" href="{% url 'home' %}">
-                        <h3 class="logo_nombre no-margin">Gestión<span class="logo_bold">Asegurada</span></h3>
-                    </a>
-                    <p class="copyright no-margin">© 2026 Gestión Asegurada</p>
-                </div>
-                <nav class="navegacion">
-                    <a href="{% url 'contacto' %}" class="navegacion_enlace">Contacto</a>
-                </nav>
-            </div>
-        </div>
-    </footer>
 </body>
 </html>

@@ -1,5 +1,5 @@
 """
-URL configuration for GestionSegura project.
+URL configuration for GestionAsegurada project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -28,11 +28,9 @@ urlpatterns = [
     path('clientes/<int:cliente_id>/', views.cliente_details, name='cliente_details'),
     path('clientes/<int:cliente_id>/edit/', views.editar_cliente, name='editar_cliente'),
     path('clientes/<int:cliente_id>/delete/', views.delete_cliente, name='delete_cliente'),
-    path('clientes/<int:cliente_id>/añadir/', views.añadir_poliza, name='añadir_poliza'),
+    path('clientes/<int:cliente_id>/agregar/', views.agregar_poliza, name='agregar_poliza'),
     path('clientes/<int:cliente_id>/<int:poliza_id>/edit/', views.editar_poliza, name='editar_poliza'),
     path('clientes/<int:cliente_id>/<int:poliza_id>/delete/', views.delete_poliza, name='delete_poliza'),
     path('logout/', views.signout, name='logout'),
     path('signin/', views.signin, name='signin'),
-    path('nosotros/', views.nosotros, name='nosotros'),
-    path('contacto/', views.contacto, name='contacto'),
 ]

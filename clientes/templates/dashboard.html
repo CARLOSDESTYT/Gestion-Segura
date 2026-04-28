@@ -2,30 +2,42 @@
 
 {% block content %}
 <div class="gestion_container">
+    <!-- Títulos -->
     <div class="gestion_header_flex">
-        <h1>Dashboard</h1>
-        <p class="subtitulo_header" style="margin-top: 30px;">Resumen de actividad: {% now "F Y" %}</p>
+        <h3>Dashboard</h3>
+        <p class="subtitulo_header">Resumen de actividad: <span style="text-transform: capitalize;">{% now 'F Y' %}</span></p>
     </div>
 
+    <!-- Pagan HOY URGENTE -->
     {% if pagan_hoy %}
-    <div class="gestion_container shadow" style="background: #fff; border-radius: 12px; border: 1px solid #ff9999; margin-top: 0;">
-        <div class="seccion_header" style="display: flex; align-items: center;">
+    <div class="gestion_container shadow shadow_red">
+        <div class="seccion_header">
             <span style="background: #ff4d4d; width: 12px; height: 12px; border-radius: 50%; margin-right: 10px;"></span>
-            <h3 style="margin: 0;">Pólizas por renovar HOY ({{ pagan_hoy|length }})</h3>
+            <h4>Pólizas por renovar HOY ({{ pagan_hoy|length }})</h4>
         </div>
         
-        <div class="gestion_grid_form" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
-            {% for p in pagan_hoy %}
-            <div class="poliza_card">
+        <!-- Pólizas -->
+        <div class="polizas_grid">
+            {% for poliza in pagan_hoy %}
+            <div class="card poliza_card">
                 <div class="poliza_card_header">
-                    <h3>{{ p.cliente.nombre }}</h3>
+                    <h4>Póliza: {{ poliza.numero_poliza }}</h4>
+                    <span>{{ poliza.estatus }}</span>
                 </div>
+
                 <div class="poliza_card_body">
-                    <p><strong>Número:</strong> {{ p.numero_poliza }}</p>
-                    <p><strong>Pago:</strong> {{ p.forma_pago }}</p>
-                    <p><strong>Último Pago:</strong> {{ p.fecha_ultimo_pago|date:"d/m/Y"|default:"Pendiente" }}</p>
+                    <p><strong>Tipo de Seguro:</strong> {{ poliza.tipo_seguro }}</p>
+                    <p><strong>Vigencia:</strong> {{ poliza.fecha_inicio|date:"d/m/Y" }} - {{ poliza.fecha_vencimiento|date:"d/m/Y" }}</p>
+                    <p><strong>Prima Total:</strong> ${{ poliza.prima_total }}</p>
+                    <p><strong>Forma de Pago:</strong> {{ poliza.forma_pago }}</p>
                 </div>
-                <a href="{% url 'editar_poliza' p.cliente.id p.id %}" class="nav_boton nav_boton--signup">Ver Póliza</a>
+
+                <div class="poliza_card_footer">
+                    <p><strong>Próxima Renovación:</strong></p>
+                    <p>{{ poliza.proxima_renovacion|date:"d \d\e F \d\e Y" }}</p>
+                </div>
+
+                <a href="{% url 'editar_poliza' poliza.cliente.id poliza.id %}" class="nav_boton nav_boton--signup">Ver Póliza</a>
             </div>
             {% endfor %}
         </div>
@@ -33,22 +45,32 @@
     {% endif %}
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px">
-        <div class="gestion_container shadow" style="background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #00a8e8">
-            <div class="seccion_header" style="display: flex; align-items: center;">
-                <h4 style="margin: 0;">Renovaciones este mes ({{ pagan_este_mes|length }})</h4>
+        <!-- Pagan este MES -->
+        <div class="gestion_container shadow shadow_blue">
+            <div class="seccion_header">
+                <h4>Renovaciones este mes ({{ pagan_este_mes|length }})</h4>
             </div>
-            <div class="gestion_grid_form" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
-                {% for p in pagan_este_mes %}
-                <div class="poliza_card">
+            <!-- Pólizas -->
+            <div class="polizas_grid">
+                {% for poliza in pagan_este_mes %}
+                <div class="card poliza_card">
                     <div class="poliza_card_header">
-                        <h3>{{ p.cliente.nombre }}</h3>
+                        <h4>Póliza: {{ poliza.numero_poliza }}</h4>
+                        <span>{{ poliza.estatus }}</span>
                     </div>
+
                     <div class="poliza_card_body">
-                        <p><strong>Número:</strong> {{ p.numero_poliza }}</p>
-                        <p><strong>Pago:</strong> {{ p.forma_pago }}</p>
-                        <p><strong>Último Pago:</strong> {{ p.fecha_ultimo_pago|date:"d/m/Y"|default:"Pendiente" }}</p>
+                        <p><strong>Tipo de Seguro:</strong> {{ poliza.tipo_seguro }}</p>
+                        <p><strong>Vigencia:</strong> {{ poliza.fecha_inicio|date:"d/m/Y" }} - {{ poliza.fecha_vencimiento|date:"d/m/Y" }}</p>
+                        <p><strong>Prima Total:</strong> ${{ poliza.prima_total }}</p>
+                        <p><strong>Forma de Pago:</strong> {{ poliza.forma_pago }}</p>
                     </div>
-                    <a href="{% url 'editar_poliza' p.cliente.id p.id %}" class="nav_boton nav_boton--signup">Ver Póliza</a>
+
+                    <div class="poliza_card_footer">
+                        <p><strong>Próxima Renovación:</strong></p>
+                        <p>{{ poliza.proxima_renovacion|date:"d \d\e F \d\e Y" }}</p>
+                    </div>
+                    <a href="{% url 'editar_poliza' poliza.cliente.id poliza.id %}" class="nav_boton nav_boton--signup">Ver Póliza</a>
                 </div>
                 {% empty %}
                 <p class="empty_state_text">Sin renovaciones este mes.</p>
@@ -56,22 +78,32 @@
             </div>
         </div>
 
-        <div class="gestion_container shadow" style="background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #00a8e8">
-            <div class="seccion_header" style="display: flex; align-items: center;">
-                <h4 style="margin: 0;">Próximas renovaciones ({{ pagan_proximos_40_dias|length }})</h4>
+        <!-- Pagan los PRÓXIMOS 40 días -->
+        <div class="gestion_container shadow shadow_blue">
+            <div class="seccion_header">
+                <h4>Próximas renovaciones ({{ pagan_proximos_40_dias|length }})</h4>
             </div>
-            <div class="gestion_grid_form" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
-                {% for p in pagan_proximos_40_dias %}
-                <div class="poliza_card">
+            <!-- Pólizas -->
+            <div class="polizas_grid">
+                {% for poliza in pagan_proximos_40_dias %}
+                <div class="card poliza_card">
                     <div class="poliza_card_header">
-                        <h3>{{ p.cliente.nombre }}</h3>
+                        <h3>Póliza: {{ poliza.numero_poliza }}</h3>
+                        <span>{{ poliza.estatus }}</span>
                     </div>
+
                     <div class="poliza_card_body">
-                        <p><strong>Número:</strong> {{ p.numero_poliza }}</p>
-                        <p><strong>Pago:</strong> {{ p.forma_pago }}</p>
-                        <p><strong>Último Pago:</strong> {{ p.fecha_ultimo_pago|date:"d/m/Y"|default:"Pendiente" }}</p>
+                        <p><strong>Tipo de Seguro:</strong> {{ poliza.tipo_seguro }}</p>
+                        <p><strong>Vigencia:</strong> {{ poliza.fecha_inicio|date:"d/m/Y" }} - {{ poliza.fecha_vencimiento|date:"d/m/Y" }}</p>
+                        <p><strong>Prima Total:</strong> ${{ poliza.prima_total }}</p>
+                        <p><strong>Forma de Pago:</strong> {{ poliza.forma_pago }}</p>
                     </div>
-                    <a href="{% url 'editar_poliza' p.cliente.id p.id %}" class="nav_boton nav_boton--signup">Ver Póliza</a>
+
+                    <div class="poliza_card_footer">
+                        <p><strong>Próxima Renovación:</strong></p>
+                        <p>{{ poliza.proxima_renovacion|date:"d \d\e F \d\e Y" }}</p>
+                    </div>
+                    <a href="{% url 'editar_poliza' poliza.cliente.id poliza.id %}" class="nav_boton nav_boton--signup">Ver Póliza</a>
                 </div>
                 {% empty %}
                 <p class="empty_state_text">Sin renovaciones en los proximos 40 días.</p>

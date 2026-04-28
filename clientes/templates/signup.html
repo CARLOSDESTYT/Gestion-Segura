@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- Font Awesome para los íconos (ojo de contraseña) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+<!-- Darle estilo al ícono del ojo de contraseña -->
 <style>
     .password-wrapper {
         position: relative;
@@ -16,35 +17,30 @@
         color: #666;
         z-index: 10;
     }
-    .campo_signup input {
-        padding-right: 45px;
-    }
 </style>
 
-<div class="container_signup"> 
+<div class="contenedor_sign"> 
     <div class="card">
-        <div class="card_title">
-            <h1>Crear Cuenta</h1>
+        <!-- Títulos -->
+        <div class="contenedor_sign_title">
+            <h4>Crear Cuenta</h4>
             <span>¿Ya tienes cuenta? <a href="{% url 'signin' %}">Inicia Sesión</a></span>
         </div>
         
-        <div class="form_signup">
-            {% if error %}
-                <p style="color: red; text-align: center; font-size: 1.2rem;">{{ error }}</p>
-            {% endif %}
-
+        <!-- Formulario (Usuario y Contraseña)-->
+        <div class="campo_gestion">
             <form method="POST" id="signupForm">
                 {% csrf_token %}
                 
                 {% for field in form %}
-                    <div class="campo_signup" style="margin-bottom: 20px;">
-                        <div style="text-align: left; margin-bottom: 2px; font-weight: bold; color: #333;">
-                            {% if field.name == 'username' %} Nombre de usuario
-                            {% elif field.name == 'password1' %} Contraseña
-                            {% elif field.name == 'password2' %} Confirmar contraseña
-                            {% else %} {{ field.label }} {% endif %}
-                        </div>
-
+                    <div class="campo_gestion">
+                        <!-- Coloca Títulos a los rellenados del formulario -->
+                        {% if field.name == 'username' %} <label>Usuario</label>
+                        {% elif field.name == 'password1' %} <label>Contraseña</label>
+                        {% elif field.name == 'password2' %} <label>Confirmar contraseña</label>
+                        {% else %} {{ field.label }} {% endif %}
+                        
+                        <!-- Mostrar rellenados de formulario -->
                         {% if field.name == 'password1' or field.name == 'password2' %}
                             <div class="password-wrapper">
                                 {{ field }}
@@ -54,23 +50,25 @@
                             {{ field }}
                         {% endif %}
                         
+                        <!-- Reglas para la contraseña -->
                         {% if field.help_text %}
-                            <div class="reglas_ayuda" style="font-size: 0.85rem; color: #666; text-align: left; margin: 5px 10px;">
+                            <div class="reglas_ayuda">
                                 {% if field.name == 'password1' %}
                                     {{ field.help_text|safe }}
                                 {% endif %}
                             </div>
                         {% endif %}
 
+                        <!-- Errores en cada campo -->
                         {% if field.errors %}
                             {% for error in field.errors %}
-                                <p style="color: red; font-size: 0.9rem; margin: 5px 10px;">{{ error }}</p>
+                                <p class="error-message">{{ error }}</p>
                             {% endfor %}
                         {% endif %}
                     </div>
                 {% endfor %}
-                
-                <button type="submit" class="boton_signup">Registrarse</button>
+
+                <button type="submit" class="nav_boton nav_boton--signup" style="padding: 1rem; font-size: 1.8rem; width: 100%;">Registrarse</button>
             </form>
         </div>
     </div>
@@ -79,11 +77,13 @@
 <script>
     // 1. Inyectar Placeholders para que se vea como el Sign-in
     document.addEventListener("DOMContentLoaded", function() {
+        // Asignarles nombre
         const userField = document.querySelector('input[name="username"]');
         const pass1Field = document.querySelector('input[name="password1"]');
         const pass2Field = document.querySelector('input[name="password2"]');
 
-        if(userField) userField.placeholder = "Nombre de Usuario";
+        // Mostrar texto dentro de los rellenados
+        if(userField) userField.placeholder = "Nombre o usuario del agente";
         if(pass1Field) pass1Field.placeholder = "Contraseña";
         if(pass2Field) pass2Field.placeholder = "Confirmar Contraseña";
     });
@@ -103,7 +103,7 @@
     // 3. Validación de coincidencia
     const password = document.querySelector('input[name="password1"]');
     const confirmPassword = document.querySelector('input[name="password2"]');
-
+    
     function validatePassword() {
         if (password && confirmPassword) {
             if (password.value != confirmPassword.value) {

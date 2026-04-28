@@ -2,40 +2,50 @@
 
 {% block content %}
 <div class="gestion_container">
+    <!-- Títulos y botón para Agregar Asegurado-->
     <div class="gestion_header_flex">
         <h3>Directorio de Asegurados</h3>
         <a href="{% url 'agregar_cliente' %}" class="nav_boton nav_boton--signup"> + Agregar Asegurado</a>
     </div>
 
-    <div class="tabla_contenedor card">
+    <!-- Tabla -->
+    <div class="tabla_contenedor">
         <table class="tabla_clientes">
+            <!-- Columnas -->
             <thead>
                 <tr>
-                    <th>Nombre Completo</th>
+                    <th>Nombre</th>
                     <th>Fecha de Nac.</th>
                     <th>Teléfono</th>
                     <th>Email</th>
-                    <th style="text-align: center;"></th>
+                    <th></th>
                 </tr>
             </thead>
+            <!-- Filas -->
             <tbody>
                 {% for cliente in clientes %}
                 <tr>
-                    <td class="col-nombre">
+                    <td>
                         <a href="{% url 'cliente_details' cliente.id %}" class="cliente_nombre_link">
                             {{ cliente.nombre }}
                         </a>
                     </td>
-                    <td>{{ cliente.fecha_nacimiento|date:'d/m/Y' }}</td>
+                    <!-- Ver si es su cumpleaños -->
+                    {% if cliente.es_cumple %}<td style="color: var(--azul2); font-weight: bold;">🎉
+                    {% else %}<td>
+                    {% endif %}
+                    {{ cliente.fecha_nacimiento|date:'D d/M/Y' }}</td>
                     <td>{{ cliente.telefono }}</td>
                     <td>{{ cliente.correo }}</td>
-                    <td style="text-align: center;">
-                        <a href="{% url 'cliente_details' cliente.id %}" class="btn_detalle">Ver Pólizas</a>
+                    <td>
+                        <a href="{% url 'cliente_details' cliente.id %}" class="nav_boton nav_boton--login2">Ver Pólizas</a>
                     </td>
                 </tr>
+
+                <!-- En caso de estar vacío, mostrar este mensaje -->
                 {% empty %}
                 <tr>
-                    <td colspan="5" style="text-align: center; padding: 40px; color: #666;">
+                    <td colspan="5" style="padding: 40px; color: var(--gris-66);">
                         No hay clientes registrados todavía. 
                     </td>
                 </tr>

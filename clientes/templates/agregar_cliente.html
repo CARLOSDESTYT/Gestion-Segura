@@ -2,6 +2,7 @@
 
 {% block content %}
 <div class="gestion_container">
+    <!-- Títulos -->
     <div class="gestion_header">
         <h3>Agregar Nuevo Cliente</h3>
         <p>Introduce los datos personales del asegurado para darlo de alta en el sistema.</p>
@@ -11,7 +12,8 @@
         <p class="error-message">{{ error }}</p>
     {% endif %}
 
-    <form action="/clientes/agregar/" method="POST" class="gestion_grid_form">
+    <!-- Formulario -->
+    <form action="{% url 'agregar_cliente' %}" method="POST" class="grid_form">
         {% csrf_token %}
         
         <div class="gestion_seccion">
@@ -39,10 +41,10 @@
         </div>
 
         <div class="gestion_footer">
-            <button class="nav_boton nav_boton--signup btn_largo">
+            <button class="nav_boton nav_boton--signup">
                 Guardar Cliente
             </button>
-            <a href="/clientes" class="enlace_cancelar">Cancelar</a>
+            <a href="{% url 'clientes' %}" class="enlace_cancelar">Cancelar</a>
         </div>
     </form>
 </div>

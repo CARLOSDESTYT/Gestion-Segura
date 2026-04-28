@@ -2,16 +2,19 @@
 
 {% block content %}
 <div class="gestion_container">
+    <!-- Títulos -->
     <div class="gestion_header">
-        <h3>Editar Póliza: {{ poliza.numero_poliza }}</h3>
-        <p>Cliente: <strong>{{ cliente.nombre }}</strong></p>
+        <h3>Editar Póliza: <span>{{ poliza.numero_poliza }}</span></h3>
+        <p><strong>Cliente: </strong>{{ cliente.nombre }}</p>
     </div>
 
+    <!-- Mensaje error -->
     {% if error %}
-        <p class="error-message" style="color: red; background: #fee; padding: 10px; border-radius: 5px;">{{ error }}</p>
+        <p class="error-message">{{ error }}</p>
     {% endif %}
 
-    <form method="POST" class="gestion_grid_form">
+    <!-- Formulario -->
+    <form method="POST" class="grid_form">
         {% csrf_token %}
         
         <div class="gestion_seccion">
@@ -59,20 +62,19 @@
         </div>
 
         <div class="gestion_footer">
-            <button type="submit" class="nav_boton nav_boton--signup btn_largo">
+            <button type="submit" class="nav_boton nav_boton--signup">
                 Guardar Cambios
             </button>
             <a href="{% url 'cliente_details' cliente.id %}" class="enlace_cancelar">Cancelar</a>
         </div>
     </form>
 
-    <hr class="divisor_peligro">
-
-    <div class="seccion_peligro" style="text-align: center; padding: 20px; border: 1px dashed red; border-radius: 10px;">
-        <p>Si eliminas esta póliza, no se podrán recuperar los datos.</p>
-        <form action="{% url 'delete_poliza' cliente.id poliza.id %}" method="POST" onsubmit="return confirm('¿Meli, estás segura de borrar esta póliza?');">
+    <!-- Aviso de eliminar póliza -->
+    <div class="seccion_peligro">
+        <p>Si eliminas esta póliza, no se podrán recuperar los datos</p>
+        <form action="{% url 'delete_poliza' cliente.id poliza.id %}" method="POST" onsubmit="return confirm('¿Aún quieres eliminar esta póliza?');">
             {% csrf_token %}
-            <button type="submit" class="btn_eliminar_borde">
+            <button type="submit" class="nav_boton nav_boton--eliminar">
                 Eliminar Póliza 
             </button>
         </form>

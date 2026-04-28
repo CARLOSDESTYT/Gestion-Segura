@@ -2,16 +2,18 @@
 
 {% block content %}
 <div class="gestion_container">
+    <!-- Títulos -->
     <div class="gestion_header">
         <h3>Agregar Nueva Póliza</h3>
-        <p>Cliente: <strong>{{ cliente.nombre }}</strong></p>
+        <p><strong>Cliente: </strong>{{ cliente.nombre }}</p>
     </div>
 
     {% if error %}
-        <p class="error-message" style="color: red; background: #fee; padding: 10px; border-radius: 5px;">{{ error }}</p>
+        <p class="error-message">{{ error }}</p>
     {% endif %}
 
-    <form method="POST" class="gestion_grid_form">
+    <!-- Formulario -->
+    <form method="POST" class="grid_form">
         {% csrf_token %}
         
         <div class="gestion_seccion">
@@ -59,7 +61,7 @@
         </div>
 
         <div class="gestion_footer">
-            <button type="submit" class="nav_boton nav_boton--signup btn_largo">
+            <button type="submit" class="nav_boton nav_boton--signup">
                 Crear Póliza
             </button>
             <a href="{% url 'cliente_details' cliente.id %}" class="enlace_cancelar">Cancelar</a>

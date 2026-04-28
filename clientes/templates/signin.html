@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- Font Awesome para los íconos (ojo de contraseña) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+<!-- Darle estilo al ícono del ojo de contraseña -->
 <style>
     .password-wrapper {
         position: relative;
@@ -16,55 +17,47 @@
         color: #666;
         z-index: 10;
     }
-    .campo_signup input {
-        padding-right: 45px;
-        width: 100%;
-    }
 </style>
 
-<div class="container_signup"> 
+<div class="contenedor_sign"> 
     <div class="card">
-        <div class="card_title">
-            <h1>Iniciar Sesión</h1>
+        <!-- Títulos -->
+        <div class="contenedor_sign_title">
+            <h4>Iniciar Sesión</h4>
             <span>¿Aún no tienes cuenta? <a href="{% url 'signup' %}">Regístrate</a></span>
         </div>
         
-        <div class="form_signup">
+        <!-- Formularios -->
+        <div class="campo_gestion">
             {% if error %}
-                <p style="color: red; text-align: center; font-size: 1.2rem; margin-bottom: 15px;">{{ error }}</p>
+                <p class="error-message">{{ error }}</p>
             {% endif %}
 
             <form method="POST" action="{% url 'signin' %}">
                 {% csrf_token %}
                 
-                <div class="campo_signup" style="margin-bottom: 20px;">
-                    <div style="text-align: left; margin-bottom: 2px; font-weight: bold; color: #333;">
-                        Nombre de usuario
-                    </div>
-                    <input type="text" name="username" id="username" placeholder="Nombre de Usuario" required />
+                <div class="campo_gestion">
+                    <label>Usuario</label>
+                    <input type="text" name="username" id="username" placeholder="Nombre o usuario del agente" required />
                 </div>
-                
-                <div class="campo_signup" style="margin-bottom: 20px;">
-                    <div style="text-align: left; margin-bottom: 2px; font-weight: bold; color: #333;">
-                        Contraseña
-                    </div>
+                <div class="campo_gestion">
+                    <label>Contraseña</label>
                     <div class="password-wrapper">
                         <input type="password" name="password" id="password" placeholder="Contraseña" required />
                         <i class="fa-solid fa-eye toggle-password" onclick="toggleVisibility('password', this)"></i>
                     </div>
                 </div>
                 
-                <button type="submit" class="boton_signup">Entrar</button>
+                <button type="submit" class="nav_boton nav_boton--signup" style="padding: 1rem; font-size: 1.8rem; width: 100%;">Entrar</button>
             </form>
         </div>
 
-        <div class="card_terms" style="justify-content: center; margin-top: 15px;">
-            <span><a href="#">¿Olvidaste tu contraseña?</a></span>
-        </div>
+        <a class="link" href="#">¿Olvidaste tu contraseña?</a>
     </div>
 </div>
 
 <script>
+    // Función para ver/ocultar contraseña
     function toggleVisibility(id, icon) {
         const input = document.getElementById(id);
         if (input.type === "password") {
